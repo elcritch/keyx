@@ -24,12 +24,11 @@ rustler_export_nifs! {
 	// They consist of a tuple containing the function name,
 	// function arity, and the Rust function itself.
 	[
-		("new", 1, buffer_new),
-		("get", 2, buffer_get),
-		("set", 3, buffer_set),
+		// ("new", 1, buffer_new),
+		("generate_shares", 3, shamir_generate_shares),
+		// ("set", 3, buffer_set),
 	],
-	// Our on_load function. Will get called on load.
-	Some(on_load)
+    None
 }
 
 struct Buffer {
@@ -37,56 +36,49 @@ struct Buffer {
 }
 
 
-// The `'a` in this function definition is something called a lifetime.
-// This will inform the Rust compiler of how long different things are
-// allowed to live. Don't worry too much about this, as this will be the
-// exact same for most function definitions.
-pub fn on_load<'a>(env: NifEnv<'a>, _load_info: NifTerm<'a>) -> bool {
-	// This macro will take care of defining and initializing a new resource
-	// object type.
-	resource_struct_init!(Buffer, env);
-	true
-}
+// pub fn buffer_new<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+// 	// The NIF should have a single argument provided, namely
+// 	// the size of the buffer we want to create.
+// 	let buffer_size: usize = args[0].decode()?;
+//
+// 	// Create the actual buffer and initialize it with zeroes.
+// 	let mut buffer = Vec::with_capacity(buffer_size);
+// 	for _i in 0..buffer_size {
+//         buffer.push(0);
+//     }
+//
+// 	// Make the actual struct
+// 	let buffer_struct = Buffer {
+// 		data: RwLock::new(buffer),
+// 	};
+//
+// 	// Return it!
+// 	Ok((atoms::ok(), ResourceArc::new(buffer_struct)).encode(env))
+// }
 
-pub fn buffer_new<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
-	// The NIF should have a single argument provided, namely
-	// the size of the buffer we want to create.
-	let buffer_size: usize = args[0].decode()?;
+pub fn shamir_generate_shares<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+	// let buffer: ResourceArc<Buffer> = args[0].decode()?;
+	let shamir_k: u8 = args[0].decode()?;
+	let shamir_n: u8 = args[1].decode()?;
+	let shamir_secret: Vec<u8> = args[2].decode()?;
 
-	// Create the actual buffer and initialize it with zeroes.
-	let mut buffer = Vec::with_capacity(buffer_size);
-	for _i in 0..buffer_size {
-        buffer.push(0);
-    }
+    // let buf = buffer.data.read().unwrap();
+    println!("generate_shares: {k} of {n} - {sec:?}", k=shamir_k, n=shamir_n, sec=shamir_secret);
 
-	// Make the actual struct
-	let buffer_struct = Buffer {
-		data: RwLock::new(buffer),
-	};
-
-	// Return it!
-	Ok((atoms::ok(), ResourceArc::new(buffer_struct)).encode(env))
-}
-
-pub fn buffer_get<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
-	let buffer: ResourceArc<Buffer> = args[0].decode()?;
-	let offset: usize = args[1].decode()?;
-
-    let buf = buffer.data.read().unwrap();
-
-	match buf.get(offset) {
-        Some(byte) =>
-            Ok(byte.encode(env)),
-        None =>
+	match generate_shares(shamir_k, shamir_n, &shamir_secret) {
+        Ok(shares) =>
+            Ok((atoms::ok(), shares).encode(env)),
+        Err(_) =>
             Ok(atoms::error().encode(env)),
     }
 }
 
-pub fn buffer_set<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
-	let buffer: ResourceArc<Buffer> = args[0].decode()?;
-	let offset: usize = args[1].decode()?;
-	let byte = args[2].decode()?;
-
-	buffer.data.write().unwrap()[offset] = byte;
-	Ok(byte.encode(env))
-}
+// pub fn buffer_set<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+// 	// let buffer: ResourceArc<Buffer> = args[0].decode()?;
+// 	let offset: usize = args[1].decode()?;
+// 	let byte: u8 = args[2].decode()?;
+//
+// 	// buffer.data.write().unwrap()[offset] = byte;
+// 	// Ok(byte.encode(env))
+//     Ok((atoms::ok()).encode(env))
+// }
