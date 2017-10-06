@@ -8,6 +8,7 @@ defmodule Keyx.Mixfile do
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
+    	compilers: [:rustler] ++ Mix.compilers(),
     	rustler_crates: rustler_crates()
     ]
   end

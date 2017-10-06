@@ -3,7 +3,7 @@ defmodule NifNotLoadedError do
 end
 
 defmodule RustySecretsNif do
-  use Rustler, otp_app: :rusty_secrets_nif, crate: "rustysecretsnif"
+  use Rustler, otp_app: :keyx, crate: "rustysecretsnif"
 
   def new(size), do: err()
   def get(buffer, idx), do: err()
