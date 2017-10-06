@@ -7,6 +7,7 @@ defmodule RustySecretsNif do
 
   # def new(size), do: err()
   def generate_shares(k, n, secret), do: err()
+  def recover_secret(shares), do: err()
   # def set(buffer, idx, value), do: err()
 
   defp err() do
