@@ -6,6 +6,9 @@ use rustler::{NifEnv, NifTerm, NifResult, NifEncoder};
 use std::sync::RwLock;
 use rustler::resource::ResourceArc;
 
+extern crate rusty_secrets;
+use rusty_secrets::{generate_shares};
+
 mod atoms {
     rustler_atoms! {
         atom ok;
