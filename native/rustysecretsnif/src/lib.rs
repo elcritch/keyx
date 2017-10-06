@@ -2,9 +2,10 @@
 #[macro_use] extern crate rustler_codegen;
 #[macro_use] extern crate lazy_static;
 
-use rustler::{NifEnv, NifTerm, NifResult, NifEncoder};
+use rustler::{NifEnv, NifTerm, NifResult, NifEncoder, TermType};
 use std::sync::RwLock;
 use rustler::resource::ResourceArc;
+use std::fmt::{self, Debug, Display};
 
 extern crate rusty_secrets;
 use rusty_secrets::{generate_shares};
@@ -60,12 +61,13 @@ pub fn shamir_generate_shares<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifR
 	// let buffer: ResourceArc<Buffer> = args[0].decode()?;
 	let shamir_k: u8 = args[0].decode()?;
 	let shamir_n: u8 = args[1].decode()?;
-	let shamir_secret: Vec<u8> = args[2].decode()?;
+    let shamir_secret: String = args[2].decode()?;
+
+    println!("rust generate_shares: {k} of {n} -- {sec:?}", k=shamir_k, n=shamir_n, sec=shamir_secret);
 
     // let buf = buffer.data.read().unwrap();
-    println!("generate_shares: {k} of {n} - {sec:?}", k=shamir_k, n=shamir_n, sec=shamir_secret);
 
-	match generate_shares(shamir_k, shamir_n, &shamir_secret) {
+	match generate_shares(shamir_k, shamir_n, &shamir_secret.into_bytes()) {
         Ok(shares) =>
             Ok((atoms::ok(), shares).encode(env)),
         Err(_) =>
