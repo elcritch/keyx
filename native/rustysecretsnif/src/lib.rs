@@ -26,18 +26,7 @@ rustler_export_nifs! {
 		("set", 3, buffer_set),
 	],
 	// Our on_load function. Will get called on load.
-	Some(on_init)
-}
-
-// The `'a` in this function definition is something called a lifetime.
-// This will inform the Rust compiler of how long different things are
-// allowed to live. Don't worry too much about this, as this will be the
-// exact same for most function definitions.
-fn on_init<'a>(env: NifEnv<'a>, _load_info: NifTerm<'a>) -> bool {
-	// This macro will take care of defining and initializing a new resource
-	// object type.
-	resource_struct_init!(Buffer, env);
-	true
+	Some(on_load)
 }
 
 struct Buffer {
@@ -45,7 +34,18 @@ struct Buffer {
 }
 
 
-fn buffer_new<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+// The `'a` in this function definition is something called a lifetime.
+// This will inform the Rust compiler of how long different things are
+// allowed to live. Don't worry too much about this, as this will be the
+// exact same for most function definitions.
+pub fn on_load<'a>(env: NifEnv<'a>, _load_info: NifTerm<'a>) -> bool {
+	// This macro will take care of defining and initializing a new resource
+	// object type.
+	resource_struct_init!(Buffer, env);
+	true
+}
+
+pub fn buffer_new<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
 	// The NIF should have a single argument provided, namely
 	// the size of the buffer we want to create.
 	let buffer_size: usize = args[0].decode()?;
@@ -62,10 +62,10 @@ fn buffer_new<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a
 	};
 
 	// Return it!
-	Ok(ResourceArc::new(buffer_struct).encode(env))
+	Ok((atoms::ok(), ResourceArc::new(buffer_struct)).encode(env))
 }
 
-fn buffer_get<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+pub fn buffer_get<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
 	let buffer: ResourceArc<Buffer> = args[0].decode()?;
 	let offset: usize = args[1].decode()?;
 
@@ -75,7 +75,7 @@ fn buffer_get<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a
 	Ok(byte.encode(env))
 }
 
-fn buffer_set<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
+pub fn buffer_set<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
 	let buffer: ResourceArc<Buffer> = args[0].decode()?;
 	let offset: usize = args[1].decode()?;
 	let byte = args[2].decode()?;
