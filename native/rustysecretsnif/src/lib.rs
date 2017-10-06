@@ -29,7 +29,7 @@ pub fn shamir_generate_shares<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifR
 	let shamir_n: u8 = args[1].decode()?;
     let shamir_secret: String = args[2].decode()?;
 
-    println!("rust generate_shares: {k} of {n} -- {sec:?}", k=shamir_k, n=shamir_n, sec=shamir_secret);
+    // println!("rust generate_shares: {k} of {n} -- {sec:?}", k=shamir_k, n=shamir_n, sec=shamir_secret);
 
     // let buf = buffer.data.read().unwrap();
 
@@ -45,7 +45,7 @@ pub fn shamir_recover_secret<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifRe
 
     let shares: Vec<String> = args[0].decode()?;
 
-    println!("rust recover_secret: {k:?} ", k=shares);
+    // println!("rust recover_secret: {k:?} ", k=shares);
 
     match recover_secret(shares) {
         Ok(secret) => {
