@@ -9,7 +9,7 @@ use rustler::resource::ResourceArc;
 mod atoms {
     rustler_atoms! {
         atom ok;
-        //atom error;
+        atom error;
         //atom __true__ = "true";
         //atom __false__ = "false";
     }
@@ -71,8 +71,12 @@ pub fn buffer_get<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTer
 
     let buf = buffer.data.read().unwrap();
 
-	let byte = buf[offset];
-	Ok(byte.encode(env))
+	match buf.get(offset) {
+        Some(byte) =>
+            Ok(byte.encode(env)),
+        None =>
+            Ok(atoms::error().encode(env)),
+    }
 }
 
 pub fn buffer_set<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifResult<NifTerm<'a>> {
