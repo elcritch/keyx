@@ -1,4 +1,4 @@
-# Keyx
+# KeyX
 
 Elixir library for Shamir's Secret Sharing (SSS) algorithm. Under the hood it's a simple wrapper around SpinResearch's [RustySecrets](https://github.com/SpinResearch/RustySecrets) using the helpful [Rustler](https://github.com/hansihe/rustler).
 

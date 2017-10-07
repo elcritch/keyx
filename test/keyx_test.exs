@@ -1,8 +1,8 @@
-defmodule KeyxTest do
+defmodule KeyXTest do
   use ExUnit.Case
-  doctest Keyx
+  doctest KeyX
 
   # test "greets the world" do
-  #   assert Keyx.hello() == :world
+  #   assert KeyX.hello() == :world
   # end
 end

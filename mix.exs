@@ -1,4 +1,4 @@
-defmodule Keyx.Mixfile do
+defmodule KeyX.Mixfile do
   use Mix.Project
 
   def project do
@@ -45,6 +45,7 @@ defmodule Keyx.Mixfile do
 
   defp package() do
     [
+      name: "KeyX",
       files: ["lib", "priv", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Jaremy Creechley", "Patrick Cieplak"],
       licenses: ["Apache 2.0"],

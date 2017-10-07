@@ -1,6 +1,6 @@
-defmodule Keyx do
+defmodule KeyX do
   @moduledoc """
-  Documentation for Keyx.
+  Documentation for KeyX.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule Keyx do
 
   ## Examples
 
-      iex> Keyx.generate_shares(1,2, "super duper secret")
+      iex> KeyX.generate_shares(1,2, "super duper secret")
       {:ok, ["1-1-c3VwZXIgZHVwZXIgc2VjcmV0", "1-2-c3VwZXIgZHVwZXIgc2VjcmV0"]}
 
   """
@@ -32,7 +32,7 @@ defmodule Keyx do
 
   ## Examples
 
-      iex> Keyx.recover_secret(["1-2-c3VwZXIgZHVwZXIgc2VjcmV0", "1-2-c3VwZXIgZHVwZXIgc2VjcmV0"])
+      iex> KeyX.recover_secret(["1-2-c3VwZXIgZHVwZXIgc2VjcmV0", "1-2-c3VwZXIgZHVwZXIgc2VjcmV0"])
       {:ok, "super duper secret"}
 
   """
