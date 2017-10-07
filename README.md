@@ -1,6 +1,8 @@
 # Keyx
 
-**TODO: Add description**
+Elixir library for Shamir's Secret Sharing (SSS) algorithm. Under the hood it's a simple wrapper around SpinResearch's [RustySecrets](https://github.com/SpinResearch/RustySecrets) using the helpful [Rustler](https://github.com/hansihe/rustler).
+
+Documentation can be found at [https://hexdocs.pm/keyx](https://hexdocs.pm/keyx).
 
 ## Installation
 
@@ -14,8 +16,3 @@ def deps do
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/keyx](https://hexdocs.pm/keyx).
-

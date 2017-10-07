@@ -8,4 +8,4 @@ erl_crash.dump
 native/*/target/
 /priv/native/
 native/rustysecretsnif/Cargo.lock
-mix.lock
+#mix.lock

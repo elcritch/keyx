@@ -3,8 +3,6 @@ defmodule Keyx do
   Documentation for Keyx.
   """
 
-  # proper test --       {:ok, ["1-2-c3VwZXIgZHVwZXIgc2VjcmV0", "1-2-c3VwZXIgZHVwZXIgc2VjcmV0"]}
-
   @doc """
   Generate secret shares using Shamir's Secret Sharing alrgorithm.
 
