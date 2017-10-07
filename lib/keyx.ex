@@ -10,20 +10,21 @@ defmodule Keyx do
 
     - K: specifies the number of shares necessary to recover the secret.
     - N: is the identifier of the share and varies between 1 and n where n is the total number of generated shares.
-    - Secret: Binary (String) of raw secret to split `N` ways, requiring `K` shares to recover. 
+    - Secret: Binary (String) of raw secret to split `N` ways, requiring `K` shares to recover.
 
-    
+
   ## Examples
 
       iex> Keyx.generate_shares(1,2, "super duper secret")
       {:ok, ["1-1-c3VwZXIgZHVwZXIgc2VjcmV0", "1-2-c3VwZXIgZHVwZXIgc2VjcmV0"]}
 
   """
+  @spec generate_shares(k :: pos_integer, n :: pos_integer, secret :: String.t) :: nonempty_list(binary)
   defdelegate generate_shares(k,n,shares), to: RustySecretsNif
 
 
   @doc """
-  Recover secrets from an appropriate number of shares. Must be equal or greater than the `K` parameters. 
+  Recover secrets from an appropriate number of shares. Must be equal or greater than the `K` parameters.
 
   ## Parameters
 
@@ -35,6 +36,7 @@ defmodule Keyx do
       {:ok, "super duper secret"}
 
   """
+  @spec recover_secret(shares :: nonempty_list(String.t) ) :: binary
   defdelegate recover_secret(shares), to: RustySecretsNif
 
 end
