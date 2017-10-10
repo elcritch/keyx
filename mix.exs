@@ -47,12 +47,9 @@ defmodule KeyX.Mixfile do
     [
       files: [
         "lib", "priv", "mix.exs", "README*", "LICENSE*",
-        "native/rustysecretsnif",
-        "native/rustysecretsnif/Cargo.lock",
-        "native/rustysecretsnif/Cargo.toml",
-        "native/rustysecretsnif/README.md",
-        "native/rustysecretsnif/src",
-        "native/rustysecretsnif/src/lib.rs",
+        "native/rustysecretsnif/Cargo.*",
+        "native/rustysecretsnif/README.*",
+        "native/rustysecretsnif/src"
       ],
       maintainers: ["Jaremy Creechley", "Patrick Cieplak"],
       licenses: ["Apache 2.0"],
