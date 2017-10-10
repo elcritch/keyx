@@ -4,7 +4,7 @@ defmodule KeyX.Mixfile do
   def project do
     [
       app: :keyx,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),
@@ -45,7 +45,15 @@ defmodule KeyX.Mixfile do
 
   defp package() do
     [
-      files: ["lib", "priv", "mix.exs", "README*", "LICENSE*"],
+      files: [
+        "lib", "priv", "mix.exs", "README*", "LICENSE*",
+        "native/rustysecretsnif",
+        "native/rustysecretsnif/Cargo.lock",
+        "native/rustysecretsnif/Cargo.toml",
+        "native/rustysecretsnif/README.md",
+        "native/rustysecretsnif/src",
+        "native/rustysecretsnif/src/lib.rs",
+      ],
       maintainers: ["Jaremy Creechley", "Patrick Cieplak"],
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/elcritch/keyx"}
