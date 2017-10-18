@@ -12,4 +12,5 @@ crate-type = ["dylib"]
 rustler = "0.15.1"
 rustler_codegen = "0.15.1"
 lazy_static = "0.2"
-rusty_secrets = "0.0.2"
+# rusty_secrets = "0.0.2"
+rusty_secrets = { git = "https://github.com/elcritch/RustySecrets", branch = "master" }

@@ -5,7 +5,7 @@
 use rustler::{NifEnv, NifTerm, NifResult, NifEncoder};
 
 extern crate rusty_secrets;
-use rusty_secrets::{generate_shares, recover_secret};
+use rusty_secrets::sss::{generate_shares_format, recover_secret_format, ShareFormatKind};
 
 mod atoms {
     rustler_atoms! {
@@ -33,9 +33,16 @@ pub fn shamir_generate_shares<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifR
 
     // let buf = buffer.data.read().unwrap();
 
-	match generate_shares(shamir_k, shamir_n, &shamir_secret.into_bytes()) {
-        Ok(shares) =>
-            Ok((atoms::ok(), shares).encode(env)),
+    let rusty_secret = shamir_secret.into_bytes();
+
+	match generate_shares_format(shamir_k, shamir_n, &rusty_secret, false, ShareFormatKind::Json) {
+        Ok(shares) => {
+            // for share in &shares {
+            //     println!("\nshare: {}", share);
+            // }
+
+            Ok((atoms::ok(), shares).encode(env))
+        },
         Err(_) =>
             Ok(atoms::error().encode(env)),
     }
@@ -47,7 +54,7 @@ pub fn shamir_recover_secret<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifRe
 
     // println!("rust recover_secret: {k:?} ", k=shares);
 
-    match recover_secret(shares) {
+    match recover_secret_format(shares, false, ShareFormatKind::Json) {
         Ok(secret) => {
             let secret_binary = String::from_utf8(secret).unwrap();
             Ok((atoms::ok(), secret_binary).encode(env))
