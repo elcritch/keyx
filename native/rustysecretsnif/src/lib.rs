@@ -37,9 +37,6 @@ pub fn shamir_generate_shares<'a>(env: NifEnv<'a>, args: &[NifTerm<'a>]) -> NifR
 
 	match generate_shares_format(shamir_k, shamir_n, &rusty_secret, false, ShareFormatKind::Json) {
         Ok(shares) => {
-            // for share in &shares {
-            //     println!("\nshare: {}", share);
-            // }
 
             Ok((atoms::ok(), shares).encode(env))
         },
