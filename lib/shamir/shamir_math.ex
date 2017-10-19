@@ -11,7 +11,7 @@ defmodule KeyX.Shamir.Arithmetic do
 
   @spec polynomial(non_neg_integer, non_neg_integer) :: polynomial
   def polynomial(intercept, degree) do
-    [ intercept | :crypto.strong_rand_bytes(degree) |> :binary.bin_to_list() ]
+    [ intercept | (:crypto.strong_rand_bytes(degree) |> :binary.bin_to_list()) ]
   end
 
   @spec evaluate(polynomial, non_neg_integer) :: non_neg_integer
