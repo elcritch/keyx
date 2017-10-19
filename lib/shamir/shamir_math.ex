@@ -66,7 +66,8 @@ defmodule KeyX.Shamir.Arithmetic do
 
     zero = 0
 
-    if :erlang.or(lhs === 0,rhs === 0), do: zero, else: ret
+    IO.puts "testing: mul: logs: #{Kernel.+(Tables.log(lhs), Tables.log(rhs))}"
+    if :erlang.or(lhs === 0, rhs === 0), do: zero, else: ret
   end
 
   @spec evaluate(polynomial, non_neg_integer) :: non_neg_integer
