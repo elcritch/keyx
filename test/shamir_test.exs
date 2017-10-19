@@ -17,20 +17,28 @@ defmodule KeyX.ShamirTest do
     end
   end
 
-  test "basic split & recover" do
-
-    secret = "t"
+  test "basic recover static" do
 
     shares = ["0E4A" |> Base.decode16!, "9954" |> Base.decode16!]
-
-    # shares = Shamir.split_secret(2, 2, secret)
-
-    IO.puts "\n\nshares: a: #{shares|>Enum.at(0)|>hexes} b: #{shares|>Enum.at(1)|>hexes} "
+    # IO.puts "\n\nshares: a: #{shares|>Enum.at(0)|>hexes} b: #{shares|>Enum.at(1)|>hexes} "
 
     res = Shamir.recover_secret(shares)
 
-    IO.puts "==> recover: #{inspect res}"
-    IO.puts "==> recover: #{res}"
+    assert "t" == res
+  end
+
+  test "basic split & recover" do
+
+    # IO.puts "<<<<<< basic split & recover"
+    secret = "t"
+    shares = Shamir.split_secret(2, 2, "t")
+
+    # IO.puts "\n\nshares: a: #{shares|>Enum.at(0)|>hexes} b: #{shares|>Enum.at(1)|>hexes} "
+
+    res = Shamir.recover_secret(shares)
+
+    # IO.puts "==> recover: #{inspect res}"
+    # IO.puts "==> recover: #{res |> hexes}"
 
     assert secret == res
   end

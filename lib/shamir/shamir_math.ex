@@ -41,8 +41,6 @@ defmodule KeyX.Shamir.Arithmetic do
                    / (at(x_samples, i) + at(x_samples, j)) )
       end
       group = basis * at(y_samples, i)
-      IO.puts "interpolate: group: #{group}"
-      IO.puts "interpolate: result: #{result}"
       result + group
     end
   end
