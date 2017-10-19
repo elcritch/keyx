@@ -71,11 +71,7 @@ defmodule KeyX.Shamir do
         share |> Enum.at(idx)
       end
 
-      IO.puts "recover: idx; #{idx} x_samples: #{x_samples|>Enum.join(" ")} y_samples: #{y_samples|>Enum.join(" ")}"
-
-      res = KeyX.Shamir.Arithmetic.interpolate(x_samples, y_samples, 0)
-      IO.puts "recover: res: interp: #{inspect res}\n\n"
-      res
+      KeyX.Shamir.Arithmetic.interpolate(x_samples, y_samples, 0)
     end
 
     res |> :binary.list_to_bin
