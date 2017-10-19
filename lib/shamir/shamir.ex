@@ -3,7 +3,7 @@ defmodule KeyX.Shamir do
   import Bitwise
   import Enum, only: [at: 2, reduce: 2]
 
-  @spec secret_split(non_neg_integer, non_neg_integer, binary) :: list(binary)
+  @spec split_secret(non_neg_integer, non_neg_integer, binary) :: list(binary)
   def split_secret(k, n, secret) when n > 255, do: raise "too many parts, n <= 255"
   def split_secret(k, n, secret) when k > n, do: raise "k cannot be less than total shares"
   def split_secret(k, n, secret) when k < 2, do: raise "k cannot be less than 2"
@@ -25,9 +25,9 @@ defmodule KeyX.Shamir do
     shares_init = for _ <- 1..n, do: []
 
     shares = Enum.reduce :binary.bin_to_list(secret), shares_init, fn(val, shares) ->
-      IO.puts "\n\nshamir:reduc: val: #{val} shares: #{inspect shares |> Enum.map(&( to_string(&1) <> <<0>> ))}"
-      IO.puts "shamir:reduc: Enum.zip(x_coorinates, shares): #{inspect Enum.zip(x_coorinates, shares)}"
-      IO.puts "shamir:reduc: x_coorinates: #{ inspect x_coorinates}"
+      # IO.puts "\n\nshamir:reduc: val: #{val} shares: #{inspect shares |> Enum.map(&( to_string(&1) <> <<0>> ))}"
+      # IO.puts "shamir:reduc: Enum.zip(x_coorinates, shares): #{inspect Enum.zip(x_coorinates, shares)}"
+      # IO.puts "shamir:reduc: x_coorinates: #{ inspect x_coorinates}"
 
       poly = KeyX.Shamir.Arithmetic.polynomial(val, k-1)
 
@@ -35,35 +35,43 @@ defmodule KeyX.Shamir do
         [ x_acc, KeyX.Shamir.Arithmetic.evaluate(poly, x) ]
       end
 
-      IO.puts "shamir:reduc: res: #{res}"
+      # IO.puts "shamir:reduc: res1: #{inspect res}"
 
       res
     end
 
-    IO.puts "shamir: shares: #{inspect shares}"
+    # IO.puts "shamir: shares: #{inspect shares}"
     for {share,x} <- Enum.zip(shares, x_coorinates), into: [] do
       res = :binary.list_to_bin([share, (x + 1) ])
-      IO.puts "shamir: res: #{inspect res}"
+      # IO.puts "shamir: res2: #{inspect res}"
       res
     end
   end
 
-  @spec secret_recover( list(binary) ) :: binary
+  @spec recover_secret( list(binary) ) :: binary
   def recover_secret(shares) do
     # Constants
-    [ size, other_sz ] = for share <- shares, into: MapSet.new, do: length(share)
+    sizes = for share <- shares, into: [], do: length(:binary.bin_to_list(share))
+    [ size | other_sz ] = sizes |> Enum.uniq
+
     y_len = size - 1
-    x_samples = for share <- shares, do: List.last(share)
+    x_samples = for share <- shares, do: List.last(share |> :binary.bin_to_list)
 
     # Error checking
     unless [] = other_sz, do: raise "shares must match in size"
-    unless length(x_samples) == length(MapSet.new(x_samples)), do: raise "Duplicated shares"
+    unless length(x_samples) == MapSet.size(MapSet.new(x_samples)), do: raise "Duplicated shares"
 
     # Evaluate polynomials and return secret!
-    for share <- shares, into: "" do
+    for share <- shares, into: [] do
       << y_samples :: binary-size(y_len) , x :: binary-size(1) >> = share
+      y_samples = :binary.bin_to_list(y_samples)
 
-      KeyX.Shamir.Arithmetic.interpolate_polynomial(x_samples, y_samples, 0)
+      IO.puts "recover: x_samples: #{inspect x_samples}"
+      IO.puts "recover: y_samples: #{inspect y_samples}"
+
+      res = KeyX.Shamir.Arithmetic.interpolate(x_samples, y_samples, 0)
+      IO.puts "recover: res: interp: #{inspect res}"
+      res
     end
   end
 
