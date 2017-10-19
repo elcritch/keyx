@@ -1,11 +1,9 @@
 defmodule KeyX.Shamir.Arithmetic do
   import Kernel, except: [+: 2, *: 2, /: 2]
   import Bitwise
-  import Enum, only: [at: 2, reduce: 2]
+  import Enum, only: [at: 2]
 
   alias KeyX.Shamir.Tables
-
-  @share_overhead 1
 
   @type polynomial :: nonempty_list(non_neg_integer)
 
@@ -44,9 +42,9 @@ defmodule KeyX.Shamir.Arithmetic do
       result + group
     end
   end
-  def interpolate(x_samples, y_samples, x), do: raise "Invalid arguments"
+  def interpolate(_x_samples, _y_samples, _x), do: raise "Invalid arguments"
 
-  def lhs / rhs when rhs === 0, do: raise ArithmeticError
+  def _lhs / rhs when rhs === 0, do: raise ArithmeticError
   def lhs / rhs do
     ret = Kernel.-(Tables.log(lhs), Tables.log(rhs))
       |> Kernel.+(255)
