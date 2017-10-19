@@ -10,8 +10,8 @@ defmodule KeyX.Mixfile do
       deps: deps(),
       description: description(),
       package: package(),
-    	compilers: [:rustler] ++ Mix.compilers(),
-    	rustler_crates: rustler_crates()
+    	compilers: Mix.compilers(),
+    	# rustler_crates: rustler_crates()
     ]
   end
 
