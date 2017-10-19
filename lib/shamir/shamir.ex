@@ -49,7 +49,7 @@ defmodule KeyX.Shamir do
   end
 
   @spec secret_recover( list(binary) ) :: binary
-  def secret_recover(shares) do
+  def recover_secret(shares) do
     # Constants
     [ size, other_sz ] = for share <- shares, into: MapSet.new, do: length(share)
     y_len = size - 1
