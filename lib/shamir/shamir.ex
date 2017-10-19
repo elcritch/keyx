@@ -7,11 +7,8 @@ defmodule KeyX.Shamir do
   def split_secret(k, _n, _secret) when k < 2, do: raise "k cannot be less than 2"
   def split_secret(_k, _n, secret) when length(secret) == 0, do: raise "secret cannot be zero"
   def split_secret(k, n, secret) do
-    set_random_seed()
-
-    # Generate random x coordinates
+    set_random_seed() # Generate random x coordinates
     x_coorinates = 0..254 |> rand_shuffle
-    # x_coorinates = 0..254
 
     # This is where implementations can differ, presumably. The H.C. Vault developers noted:
     # // Make random polynomials for each byte of the secret
@@ -24,28 +21,17 @@ defmodule KeyX.Shamir do
     shares_init = for _ <- 1..n, do: []
 
     shares = Enum.reduce :binary.bin_to_list(secret), shares_init, fn(val, shares) ->
-      # IO.puts "\n\nshamir:reduc: val: #{val} shares: #{inspect shares |> Enum.map(&( to_string(&1) <> <<0>> ))}"
-      # IO.puts "shamir:reduc: Enum.zip(x_coorinates, shares): #{inspect Enum.zip(x_coorinates, shares)}"
-      # IO.puts "shamir:reduc: x_coorinates: #{ inspect x_coorinates}"
-
       poly = Arithmetic.polynomial(val, k-1)
 
-      res = for {x_val,y_acc} <- Enum.zip(x_coorinates, shares), into: [] do
+      for {x_val,y_acc} <- Enum.zip(x_coorinates, shares), into: [] do
         x = x_val + 1
         y = poly |> Arithmetic.evaluate(x)
         [ y_acc, y ]
       end
-
-      # IO.puts "shamir:reduc: res1: #{res |> to_string |> :binary.bin_to_list |>Enum.join(" ") }"
-
-      res
     end
 
-    # IO.puts "shamir: shares: #{inspect shares}"
     for {share,x} <- Enum.zip(shares, x_coorinates), into: [] do
-      res = :binary.list_to_bin([share, (x + 1) ])
-      # IO.puts "shamir:split: res2: #{res |> :binary.bin_to_list |>Enum.join(" ")}"
-      res
+      :binary.list_to_bin([share, (x + 1) ])
     end
   end
 
@@ -53,25 +39,21 @@ defmodule KeyX.Shamir do
   def recover_secret(shares) do
     # Constants
     shares = Enum.map(shares, &:binary.bin_to_list/1)
-    # IO.puts "recover: shares input: #{inspect shares}"
     sizes = for share <- shares, into: [], do: length(share)
     [ size | other_sz ] = sizes |> Enum.uniq
 
     y_len = size - 1
     x_samples = for share <- shares, do: List.last(share)
 
-    # IO.puts "recover: shares: y_len: #{y_len}"
     # Error checking
     unless [] = other_sz, do: raise "shares must match in size"
     unless length(x_samples) == MapSet.size(MapSet.new(x_samples)), do: raise "Duplicated shares"
 
     # Evaluate polynomials and return secret!
     res = for idx <- 0..(y_len-1), into: [] do
-
       y_samples = for share <- shares, into: [] do
         share |> Enum.at(idx)
       end
-
       KeyX.Shamir.Arithmetic.interpolate(x_samples, y_samples, 0)
     end
 

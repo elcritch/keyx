@@ -46,25 +46,22 @@ defmodule KeyX.Shamir.Arithmetic do
 
   def _lhs / rhs when rhs === 0, do: raise ArithmeticError
   def lhs / rhs do
+    zero = 0
     ret = Kernel.-(Tables.log(lhs), Tables.log(rhs))
       |> Kernel.+(255)
       |> rem(255)
       |> Tables.exp
-
-    zero = 0
 
     if (lhs ===0), do: zero, else: ret
   end
 
   # Multiplies two numbers in GF(2^8)
   def lhs * rhs do
+    zero = 0
     ret = Kernel.+(Tables.log(lhs), Tables.log(rhs))
       |> rem(255)
       |> Tables.exp
 
-    zero = 0
-
-    # IO.puts "testing: mul: logs: #{Kernel.+(Tables.log(lhs), Tables.log(rhs))}"
     if :erlang.or(lhs === 0, rhs === 0), do: zero, else: ret
   end
 
