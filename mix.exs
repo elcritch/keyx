@@ -4,14 +4,12 @@ defmodule KeyX.Mixfile do
   def project do
     [
       app: :keyx,
-      version: "0.2.1",
+      version: "0.3.0",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),
       description: description(),
       package: package(),
-    	compilers: Mix.compilers(),
-    	# rustler_crates: rustler_crates()
     ]
   end
 
@@ -29,7 +27,6 @@ defmodule KeyX.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:rustler, "~> 0.10.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
     ]
   end
