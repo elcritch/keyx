@@ -1,5 +1,5 @@
 defmodule KeyX.Shamir do
-  import Kernel, except: [+: 2, *: 2, /: 2]
+  # import Kernel, except: [+: 2, *: 2, /: 2]
   import Bitwise
   import Enum, only: [at: 2, reduce: 2]
 
@@ -31,7 +31,7 @@ defmodule KeyX.Shamir do
     end
 
     for {share,x} <- Enum.zip(shares, x_coorinates), into: [] do
-      List.to_string([share | x])
+      List.to_string([share | (x + 1) ])
     end
   end
 

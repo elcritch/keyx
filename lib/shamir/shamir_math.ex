@@ -26,7 +26,7 @@ defmodule KeyX.Shamir.Arithmetic do
     end)
   end
 
-  def interpolate_polynomial(x_samples, y_samples, x)
+  def interpolate(x_samples, y_samples, x)
             when length(x_samples) == length(x_samples) do
     # Setup interpolation env
     limit = length(x_samples) - 1
@@ -37,14 +37,13 @@ defmodule KeyX.Shamir.Arithmetic do
       inner_rng = Enum.reject(0..limit, &(&1 == i))
 
       basis = Enum.reduce inner_rng, 1, fn(j, basis) ->
-        basis * (  (x + at(x_samples, j))
+        basis * (  (x + at(x_samples, j) )
                    / (at(x_samples, i) + at(x_samples, j)) )
       end
-      group = at(y_samples, i) * basis
-      result * group
+      result + (basis * at(y_samples, i))
     end
   end
-  def interpolate_polynomial(x_samples, y_samples, x), do: "Invalid arguments"
+  def interpolate(x_samples, y_samples, x), do: raise "Invalid arguments"
 
   def lhs / rhs when rhs === 0, do: raise ArithmeticError
   def lhs / rhs do
@@ -66,11 +65,11 @@ defmodule KeyX.Shamir.Arithmetic do
 
     zero = 0
 
-    IO.puts "testing: mul: logs: #{Kernel.+(Tables.log(lhs), Tables.log(rhs))}"
+    # IO.puts "testing: mul: logs: #{Kernel.+(Tables.log(lhs), Tables.log(rhs))}"
     if :erlang.or(lhs === 0, rhs === 0), do: zero, else: ret
   end
 
-  @spec evaluate(polynomial, non_neg_integer) :: non_neg_integer
+  # @spec evaluate(polynomial, non_neg_integer) :: non_neg_integer
   def lhs + rhs, do: lhs ^^^ rhs
 
 
