@@ -37,7 +37,21 @@ defmodule KeyX.Shamir do
 
   @spec secret_recover( list(binary) ) :: binary
   def secret_recover(shares) do
-    1
+    # Constants
+    [ size, other_sz ] = for share <- shares, into: MapSet.new, do: length(share)
+    y_len = size - 1
+    x_samples = for share <- shares, do: List.last(share)
+
+    # Error checking
+    unless [] = other_sz, do: raise "shares must match in size"
+    unless length(x_samples) == length(MapSet.new(x_samples)), do: raise "Duplicated shares"
+
+    # Evaluate polynomials and return secret!
+    for share <- shares, into: "" do
+      << y_samples :: binary-size(y_len) , x :: binary-size(1) >> = share
+
+      KeyX.Shamir.Arithmetic.interpolate_polynomial(x_samples, y_samples, 0)
+    end
   end
 
 
