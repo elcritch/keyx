@@ -4,11 +4,11 @@ defmodule KeyX.Shamir do
   import Enum, only: [at: 2, reduce: 2]
 
   @spec secret_split(non_neg_integer, non_neg_integer, binary) :: list(binary)
-  def secret_split(k, n, secret) when n > 255, do: raise "too many parts, n <= 255"
-  def secret_split(k, n, secret) when k > n, do: raise "k cannot be less than total shares"
-  def secret_split(k, n, secret) when k < 2, do: raise "k cannot be less than 2"
-  def secret_split(k, n, secret) when length(secret) == 0, do: raise "secret cannot be zero"
-  def secret_split(k, n, secret) do
+  def split_secret(k, n, secret) when n > 255, do: raise "too many parts, n <= 255"
+  def split_secret(k, n, secret) when k > n, do: raise "k cannot be less than total shares"
+  def split_secret(k, n, secret) when k < 2, do: raise "k cannot be less than 2"
+  def split_secret(k, n, secret) when length(secret) == 0, do: raise "secret cannot be zero"
+  def split_secret(k, n, secret) do
     set_random_seed()
 
     # Generate random x coordinates
