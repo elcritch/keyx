@@ -51,28 +51,34 @@ defmodule KeyX.Shamir do
   @spec recover_secret( list(binary) ) :: binary
   def recover_secret(shares) do
     # Constants
-    sizes = for share <- shares, into: [], do: length(:binary.bin_to_list(share))
+    shares = Enum.map(shares, &:binary.bin_to_list/1)
+    IO.puts "recover: shares input: #{inspect shares}"
+    sizes = for share <- shares, into: [], do: length(share)
     [ size | other_sz ] = sizes |> Enum.uniq
 
     y_len = size - 1
-    x_samples = for share <- shares, do: List.last(share |> :binary.bin_to_list)
+    x_samples = for share <- shares, do: List.last(share)
 
+    IO.puts "recover: shares: y_len: #{y_len}"
     # Error checking
     unless [] = other_sz, do: raise "shares must match in size"
     unless length(x_samples) == MapSet.size(MapSet.new(x_samples)), do: raise "Duplicated shares"
 
     # Evaluate polynomials and return secret!
-    for share <- shares, into: [] do
-      << y_samples :: binary-size(y_len) , x :: binary-size(1) >> = share
-      y_samples = :binary.bin_to_list(y_samples)
+    res = for idx <- 0..(y_len-1), into: [] do
 
-      IO.puts "recover: x_samples: #{inspect x_samples}"
-      IO.puts "recover: y_samples: #{inspect y_samples}"
+      y_samples = for share <- shares, into: [] do
+        share |> Enum.at(idx)
+      end
+
+      IO.puts "recover: idx; #{idx} x_samples: #{x_samples|>Enum.join(" ")} y_samples: #{y_samples|>Enum.join(" ")}"
 
       res = KeyX.Shamir.Arithmetic.interpolate(x_samples, y_samples, 0)
-      IO.puts "recover: res: interp: #{inspect res}"
+      IO.puts "recover: res: interp: #{inspect res}\n\n"
       res
     end
+
+    res |> :binary.list_to_bin
   end
 
 

@@ -40,7 +40,10 @@ defmodule KeyX.Shamir.Arithmetic do
         basis * (  (x + at(x_samples, j) )
                    / (at(x_samples, i) + at(x_samples, j)) )
       end
-      result + (basis * at(y_samples, i))
+      group = basis * at(y_samples, i)
+      IO.puts "interpolate: group: #{group}"
+      IO.puts "interpolate: result: #{result}"
+      result + group
     end
   end
   def interpolate(x_samples, y_samples, x), do: raise "Invalid arguments"

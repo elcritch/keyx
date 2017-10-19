@@ -19,16 +19,22 @@ defmodule KeyX.ShamirTest do
 
   test "basic split & recover" do
 
-    secret = "test"
+    secret = "t"
 
-    shares = Shamir.split_secret(3, 5, secret)
+    shares = ["0E4A" |> Base.decode16!, "9954" |> Base.decode16!]
 
-    IO.puts "shares: #{inspect shares}"
+    # shares = Shamir.split_secret(2, 2, secret)
 
-    res = Shamir.recover_secret(Enum.slice(shares, 0, 3))
+    IO.puts "\n\nshares: a: #{shares|>Enum.at(0)|>hexes} b: #{shares|>Enum.at(1)|>hexes} "
 
-    IO.puts "recover: res: #{inspect res}"
+    res = Shamir.recover_secret(shares)
+
+    IO.puts "==> recover: #{inspect res}"
+    IO.puts "==> recover: #{res}"
+
+    assert secret == res
   end
 
 
+  def hexes(share), do: share |> Base.encode16 |> String.downcase
 end
