@@ -14,7 +14,7 @@ defmodule KeyX.Shamir do
 
     # Generate random x coordinates
     x_coorinates = 0..254 |> rand_shuffle
-    x_coorinates = 0..254
+    # x_coorinates = 0..254
 
     # This is where implementations can differ, presumably. The H.C. Vault developers noted:
     # // Make random polynomials for each byte of the secret

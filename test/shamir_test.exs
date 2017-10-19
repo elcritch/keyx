@@ -17,12 +17,22 @@ defmodule KeyX.ShamirTest do
     end
   end
 
-  test "basic recover static" do
+  test "basic recover static short" do
 
     shares = ["0E4A" |> Base.decode16!, "9954" |> Base.decode16!]
     res = Shamir.recover_secret(shares)
 
     assert "t" == res
+  end
+
+  test "basic recover static long" do
+    shares =
+        ["C8EF4C4201", "9673E6A402", "2AF9D99203", "992DC30904", "25A7FC3F05"]
+        |> Enum.map(&Base.decode16!/1)
+
+    res = Shamir.recover_secret(shares |> Enum.slice(0,3))
+
+    assert "test" == res
   end
 
   test "basic split & recover short" do
