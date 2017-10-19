@@ -22,16 +22,29 @@ defmodule KeyX.Shamir do
     #	// use a new polynomial for each byte.
     # We could use larger numbers (large field set (larger primes?)),
     # but maintaining compatibility is a key goal in this project
-    shares = Enum.reduce secret, [], fn(val, shares) ->
+    shares_init = for _ <- 1..n, do: []
+
+    shares = Enum.reduce :binary.bin_to_list(secret), shares_init, fn(val, shares) ->
+      IO.puts "\n\nshamir:reduc: val: #{val} shares: #{inspect shares |> Enum.map(&( to_string(&1) <> <<0>> ))}"
+      IO.puts "shamir:reduc: Enum.zip(x_coorinates, shares): #{inspect Enum.zip(x_coorinates, shares)}"
+      IO.puts "shamir:reduc: x_coorinates: #{ inspect x_coorinates}"
+
       poly = KeyX.Shamir.Arithmetic.polynomial(val, k-1)
 
-      for {x,x_acc} <- Enum.zip(x_coorinates, shares), into: [] do
-        [ shares, KeyX.Shamir.Arithmetic.evaluate(x) ]
+      res = for {x,x_acc} <- Enum.zip(x_coorinates, shares), into: [] do
+        [ x_acc, KeyX.Shamir.Arithmetic.evaluate(poly, x) ]
       end
+
+      IO.puts "shamir:reduc: res: #{res}"
+
+      res
     end
 
+    IO.puts "shamir: shares: #{inspect shares}"
     for {share,x} <- Enum.zip(shares, x_coorinates), into: [] do
-      List.to_string([share | (x + 1) ])
+      res = :binary.list_to_bin([share, (x + 1) ])
+      IO.puts "shamir: res: #{inspect res}"
+      res
     end
   end
 
@@ -61,8 +74,8 @@ defmodule KeyX.Shamir do
     :rand.seed(:exsplus, {i1, i2, i3})
   end
 
-  def rand_shuffle(list) when is_list(list) do
-    Enum.sort_by( fn _x -> :rand.uniform() end )
+  def rand_shuffle(list) do
+    list |> Enum.sort_by( fn _x -> :rand.uniform() end )
   end
 
 end
