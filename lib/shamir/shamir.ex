@@ -1,14 +1,11 @@
 defmodule KeyX.Shamir do
-  # import Kernel, except: [+: 2, *: 2, /: 2]
-  import Bitwise
-  import Enum, only: [at: 2, reduce: 2]
   alias KeyX.Shamir.Arithmetic
 
   @spec split_secret(non_neg_integer, non_neg_integer, binary) :: list(binary)
-  def split_secret(k, n, secret) when n > 255, do: raise "too many parts, n <= 255"
-  def split_secret(k, n, secret) when k > n, do: raise "k cannot be less than total shares"
-  def split_secret(k, n, secret) when k < 2, do: raise "k cannot be less than 2"
-  def split_secret(k, n, secret) when length(secret) == 0, do: raise "secret cannot be zero"
+  def split_secret(_k, n, _secret) when n > 255, do: raise "too many parts, n <= 255"
+  def split_secret(k, n, _secret) when k > n, do: raise "k cannot be less than total shares"
+  def split_secret(k, _n, _secret) when k < 2, do: raise "k cannot be less than 2"
+  def split_secret(_k, _n, secret) when length(secret) == 0, do: raise "secret cannot be zero"
   def split_secret(k, n, secret) do
     set_random_seed()
 

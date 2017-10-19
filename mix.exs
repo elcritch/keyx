@@ -29,27 +29,15 @@ defmodule KeyX.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler, "~> 0.10.1"},
+      # {:rustler, "~> 0.10.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
-    ]
-  end
-
-  def rustler_crates do
-    [
-      rusty_secrets_nif: [
-        path: "native/rustysecretsnif",
-        features: [],
-      ]
     ]
   end
 
   defp package() do
     [
       files: [
-        "lib", "priv", "mix.exs", "README*", "LICENSE*",
-        "native/rustysecretsnif/Cargo.*",
-        "native/rustysecretsnif/README.*",
-        "native/rustysecretsnif/src"
+        "lib", "priv", "mix.exs", "README*", "LICENSE*"
       ],
       maintainers: ["Jaremy Creechley", "Patrick Cieplak"],
       licenses: ["Apache 2.0"],

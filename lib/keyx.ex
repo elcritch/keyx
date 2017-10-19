@@ -20,7 +20,7 @@ defmodule KeyX do
 
   """
   @spec generate_shares(k :: pos_integer, n :: pos_integer, secret :: String.t) :: nonempty_list(binary)
-  defdelegate generate_shares(k,n,shares), to: RustySecretsNif
+  defdelegate generate_shares(k,n,shares), to: KeyX.Shamir, as: :split_secret
 
 
   @doc """
@@ -37,6 +37,6 @@ defmodule KeyX do
 
   """
   @spec recover_secret(shares :: nonempty_list(String.t) ) :: binary
-  defdelegate recover_secret(shares), to: RustySecretsNif
+  defdelegate recover_secret(shares), to: KeyX.Shamir
 
 end
