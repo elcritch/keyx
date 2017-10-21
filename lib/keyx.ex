@@ -80,7 +80,7 @@ defmodule KeyX do
   end
 
   @doc """
-  Same as `recover_secret` but no extra error handlineg.
+  Same as `recover_secret` but no extra error handling.
 
   ## Parameters
 
