@@ -4,7 +4,7 @@ defmodule KeyX.Mixfile do
   def project do
     [
       app: :keyx,
-      version: "0.3.0",
+      version: "0.3.1",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),
