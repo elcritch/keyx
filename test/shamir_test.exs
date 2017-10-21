@@ -49,6 +49,7 @@ defmodule KeyX.ShamirTest do
 
     res = Shamir.recover_secret(shares |> Enum.slice(0,2))
 
+    IO.puts "shares: #{inspect shares}, recover: #{res}"
     assert secret == res
   end
 
