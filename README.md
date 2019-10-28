@@ -18,7 +18,7 @@ by adding `keyx` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:keyx, "~> 0.3.1"}
+    {:keyx, "~> 0.4.1"}
   ]
 end
 ```
