@@ -4,7 +4,7 @@ defmodule KeyX.Mixfile do
   def project do
     [
       app: :keyx,
-      version: "0.4.0",
+      version: "0.4.1",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),
@@ -34,7 +34,7 @@ defmodule KeyX.Mixfile do
   defp package() do
     [
       files: [
-        "lib", "priv", "mix.exs", "README*", "LICENSE*"
+        "lib", "mix.exs", "README*", "LICENSE*"
       ],
       maintainers: ["Jaremy Creechley", "Patrick Cieplak"],
       licenses: ["Apache 2.0"],
